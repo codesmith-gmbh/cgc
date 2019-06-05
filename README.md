@@ -1,0 +1,2 @@
+# cgc
+Codesmith Go Common
