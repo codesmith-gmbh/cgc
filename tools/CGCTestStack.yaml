@@ -1,0 +1,16 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: A Stack with resources to Test the CGC lib
+Parameters:
+  VpcId:
+    Type: String
+Resources:
+  SecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: !Sub "Security Group for test the CGC lib"
+      VpcId: !Ref VpcId
+Outputs:
+  SecurityGroup:
+    Value: !Ref SecurityGroup
+    Export:
+      Name: !Sub "${AWS::StackName}-SecurityGroup"
