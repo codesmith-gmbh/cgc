@@ -1,4 +1,4 @@
-package testUtil
+package cgctesting
 
 import (
 	"github.com/aws/aws-sdk-go-v2/aws"
