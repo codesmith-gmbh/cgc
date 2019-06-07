@@ -39,6 +39,7 @@ A9dY7IHSubtCK/i8wxMVqfd5GtbA8mmpeJFwnDvm9rBEsHybl08qlax9syEwsUYr
 var certPool = createCertPool()
 
 func createCertPool() *x509.CertPool {
+	certPool := x509.NewCertPool()
 	certPool.AppendCertsFromPEM(rdsCa2015Root)
 	return certPool
 }
