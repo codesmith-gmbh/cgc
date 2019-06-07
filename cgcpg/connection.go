@@ -27,7 +27,7 @@ func createCertPool() *x509.CertPool {
 }
 
 type ConnConfigOption interface {
-	configure(config *pgx.ConnConfig) error
+	Configure(config *pgx.ConnConfig) error
 }
 
 type RdsIamConfigOption struct {
@@ -36,7 +36,7 @@ type RdsIamConfigOption struct {
 	Config                   aws.Config
 }
 
-func (r RdsIamConfigOption) configure(config *pgx.ConnConfig) error {
+func (r RdsIamConfigOption) Configure(config *pgx.ConnConfig) error {
 	endpoint := r.Host + ":" + strconv.Itoa(r.Port)
 	token, err := rdsutils.BuildAuthToken(endpoint, r.Config.Region, r.Username, r.Config.Credentials)
 	if err != nil {
@@ -54,7 +54,7 @@ type TlsConfigOption struct {
 	Host string
 }
 
-func (t TlsConfigOption) configure(config *pgx.ConnConfig) error {
+func (t TlsConfigOption) Configure(config *pgx.ConnConfig) error {
 	tlsConfig := &tls.Config{
 		RootCAs:    certPool,
 		ServerName: t.Host,
@@ -66,7 +66,7 @@ func (t TlsConfigOption) configure(config *pgx.ConnConfig) error {
 func NewConfig(options ...ConnConfigOption) (pgx.ConnConfig, error) {
 	config := pgx.ConnConfig{}
 	for _, o := range options {
-		if err := o.configure(&config); err != nil {
+		if err := o.Configure(&config); err != nil {
 			return pgx.ConnConfig{}, err
 		}
 	}
