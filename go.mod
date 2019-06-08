@@ -3,6 +3,7 @@ module github.com/codesmith-gmbh/cgc
 go 1.12
 
 require (
+	github.com/aws/aws-lambda-go v1.11.1
 	github.com/aws/aws-sdk-go-v2 v0.9.0
 	github.com/cockroachdb/apd v1.1.0 // indirect
 	github.com/jackc/fake v0.0.0-20150926172116-812a484cc733 // indirect
