@@ -3,6 +3,7 @@ package cgccf
 import (
 	"context"
 	"github.com/aws/aws-lambda-go/cfn"
+	"github.com/aws/aws-lambda-go/lambda"
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/cloudformation"
 	"github.com/pkg/errors"
@@ -56,4 +57,8 @@ func WrapForErrorPhysicalId(proc func(context.Context, cfn.Event) (string, map[s
 		}
 		return physicalId, data, err
 	}
+}
+
+func StartEventProcessor(p EventProcessor) {
+	lambda.Start(cfn.LambdaWrap(WrapForErrorPhysicalId(p.ProcessEvent)))
 }
