@@ -4,13 +4,20 @@ import (
 	"fmt"
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/aws/external"
-	"github.com/codesmith-gmbh/cgc/cgcaws"
 	"log"
 	"os"
 	"strconv"
 )
 
 // AWS Configuration
+
+func MustConfig(configs ...external.Config) aws.Config {
+	cfg, err := external.LoadDefaultAWSConfig(configs...)
+	if err != nil {
+		panic(err)
+	}
+	return cfg
+}
 
 func MustTestConfig() aws.Config {
 	codeBuildId := os.Getenv("CODEBUILD_BUILD_ID")
@@ -19,9 +26,9 @@ func MustTestConfig() aws.Config {
 		if testProfile == "" {
 			panic("the env var CGC_TEST_AWS_PROFILE is not defined")
 		}
-		return cgcaws.MustConfig(external.WithSharedConfigProfile(testProfile))
+		return MustConfig(external.WithSharedConfigProfile(testProfile))
 	}
-	return cgcaws.MustConfig()
+	return MustConfig()
 }
 
 func MustEnvString(key string) string {
