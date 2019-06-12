@@ -3,6 +3,7 @@ package cgcaws
 import (
 	"context"
 	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/aws/awserr"
 	"github.com/aws/aws-sdk-go-v2/service/ec2"
 	"github.com/pkg/errors"
 	"io/ioutil"
@@ -11,8 +12,9 @@ import (
 )
 
 const (
-	AwsUrl   = "http://checkip.amazonaws.com"
-	IpifyUrl = "https://api.ipify.org"
+	AwsUrl                    = "http://checkip.amazonaws.com"
+	IpifyUrl                  = "https://api.ipify.org"
+	DuplicateIngressErrorCode = "InvalidPermission.Duplicate"
 )
 
 type SGS struct {
@@ -112,6 +114,10 @@ func (sgs *SGS) AuthorizeDescribedIngress(ctx context.Context, groupId, cidr, de
 		},
 	}).Send(ctx)
 	if err != nil {
+		awsErr, ok := err.(awserr.Error)
+		if ok && awsErr.Code() == DuplicateIngressErrorCode {
+			return nil
+		}
 		return errors.Wrapf(err, "could not authorize for the group %s, cidr %s and description %s", groupId, cidr, description)
 	}
 	return nil
